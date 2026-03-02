@@ -106,24 +106,28 @@
         const user = tg.initDataUnsafe.user;
 
         async function loadData() {
-            if (!user) {
-                document.getElementById('acc_num').innerText = "Ошибка: ID не найден";
-                return;
-            }
-            try {
-                // Добавляем случайное число, чтобы ngrok не отдавал старую страницу
-                const url = `https://ongoing-rutha-pedicellar.ngrok-free.dev/api/balance?user_id=${user.id}&t=${Date.now()}`;
-                
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                // Проверяем, что пришли именно balance и account
-                document.getElementById('balance').innerText = (data.balance || 0).toFixed(2) + " NSCT";
-                document.getElementById('acc_num').innerText = "Ваш номер счета: " + (data.account || "---");
-            } catch (e) {
-                document.getElementById('balance').innerText = "Ошибка соединения";
-            }
-        }
+    if (!user) {
+        document.getElementById('acc_num').innerText = "Ошибка: ID не найден";
+        return;
+    }
+    try {
+        // v=${Date.now()} заставляет каждый раз скачивать свежие данные
+        const url = `https://ongoing-rutha-pedicellar.ngrok-free.dev/api/balance?user_id=${user.id}&v=${Date.now()}`;
+        
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Status: ' + response.status);
+        
+        const data = await response.json();
+        
+        // Важно: parseFloat иtoFixed, чтобы всегда были красивые цифры
+        document.getElementById('balance').innerText = `${parseFloat(data.balance).toFixed(2)} NSCT`;
+        document.getElementById('acc_num').innerText = `Ваш номер счета: ${data.account || '---'}`;
+    } catch (e) {
+        console.error("Ошибка:", e);
+        document.getElementById('balance').innerText = "Ошибка";
+        document.getElementById('acc_num').innerText = "Проблема с соединением";
+    }
+}
 
         function sendTransfer() {
             const acc = document.getElementById('target_acc').value;
