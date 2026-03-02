@@ -107,25 +107,21 @@
 
         async function loadData() {
             if (!user) {
-                document.getElementById('acc_num').innerText = "Ошибка: откройте в Telegram";
+                document.getElementById('acc_num').innerText = "Ошибка: ID не найден";
                 return;
             }
             try {
-                // ВАЖНО: Убедись, что ссылка совпадает с той, что в терминале ngrok
-               const url = `https://ongoing-rutha-pedicellar.ngrok-free.dev/api/balance?user_id=1144929630&v=${Math.random()}`;
+                // Добавляем случайное число, чтобы ngrok не отдавал старую страницу
+                const url = `https://ongoing-rutha-pedicellar.ngrok-free.dev/api/balance?user_id=${user.id}&t=${Date.now()}`;
                 
                 const response = await fetch(url);
-                if (!response.ok) throw new Error('Ошибка сети');
-                
                 const data = await response.json();
                 
-                // Отображаем баланс и номер счета
-                document.getElementById('balance').innerText = `${parseFloat(data.balance).toFixed(2)} NSCT`;
-                document.getElementById('acc_num').innerText = `Ваш номер счета: ${data.account || '---'}`;
+                // Проверяем, что пришли именно balance и account
+                document.getElementById('balance').innerText = (data.balance || 0).toFixed(2) + " NSCT";
+                document.getElementById('acc_num').innerText = "Ваш номер счета: " + (data.account || "---");
             } catch (e) {
-                console.error("Ошибка запроса:", e);
-                document.getElementById('balance').innerText = "Ошибка";
-                document.getElementById('acc_num').innerText = "Сервер недоступен (проверь ngrok)";
+                document.getElementById('balance').innerText = "Ошибка соединения";
             }
         }
 
