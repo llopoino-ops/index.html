@@ -112,7 +112,7 @@
     }
     try {
         // v=${Date.now()} заставляет каждый раз скачивать свежие данные
-        const url = 'https://ongoing-rutha-pedicellar.ngrok-free.dev/api/balance?user_id=' + user.id;
+        const url = `https://ongoing-rutha-pedicellar.ngrok-free.dev/api/balance?user_id=${user.id}`;
         
         const response = await fetch(url);
         if (!response.ok) throw new Error('Status: ' + response.status);
