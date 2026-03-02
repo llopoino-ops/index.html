@@ -112,7 +112,7 @@
             }
             try {
                 // ВАЖНО: Убедись, что ссылка совпадает с той, что в терминале ngrok
-                const url = `https://ongoing-rutha-pedicellar.ngrok-free.dev/api/balance?user_id=1144929630`;
+               const url = `https://ongoing-rutha-pedicellar.ngrok-free.dev/api/balance?user_id=1144929630&v=${Math.random()}`;
                 
                 const response = await fetch(url);
                 if (!response.ok) throw new Error('Ошибка сети');
